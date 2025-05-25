@@ -1,0 +1,16 @@
+# workflow/Snakefile
+
+configfile: "config/config.yaml"
+
+rule all:
+    input:
+        expand("data/raw/{sra}.fastq", sra=config["sra_ids"])
+
+rule download_fastq:
+    output:
+        "data/raw/{sra}.fastq"
+    shell:
+        """
+        prefetch {wildcards.sra}
+        fasterq-dump {wildcards.sra} -O data/raw/
+        """
